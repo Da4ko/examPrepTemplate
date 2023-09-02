@@ -25,7 +25,7 @@ public class CategoryServiceImpl implements CategoryService {
                         Category category = new Category(categoryName,
                                 "Description for " + categoryName.name());
 
-                        categoryRepository.save(category);
+                        categoryRepository.save(category) ;
                     });
         }
     }
