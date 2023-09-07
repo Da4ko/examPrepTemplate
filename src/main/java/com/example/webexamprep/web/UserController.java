@@ -1,9 +1,11 @@
 package com.example.webexamprep.web;
 
 
+import com.example.webexamprep.model.binding.UserLoginBindingModel;
 import com.example.webexamprep.model.binding.UserRegisterBindingModel;
 import com.example.webexamprep.model.service.UserServiceModel;
 import com.example.webexamprep.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
@@ -55,4 +57,43 @@ public class UserController {
         return "redirect:login";
 
     }
+    @GetMapping("/login")
+    public String login(Model model){
+        if(!model.containsAttribute("userLoginBindingModel")){
+            model.addAttribute("userLoginBindingModel", new UserLoginBindingModel());
+            model.addAttribute("notFound", false);
+        }
+
+        return "login";
+    }
+    @PostMapping("/login")
+    public String loginConfirm(@Valid UserLoginBindingModel userLoginBindingModel,
+                               BindingResult bindingResult,
+                               RedirectAttributes redirectAttributes,
+                               HttpSession httpSession){
+        if(bindingResult.hasErrors()){
+            redirectAttributes.addFlashAttribute("userLoginBindingModel", userLoginBindingModel);
+            redirectAttributes.addFlashAttribute(
+                    "org.springframework.validation.BindingResult.userLoginBindingModel",
+                    bindingResult);
+
+            return "redirect:login";
+        }
+        UserServiceModel userServiceModel = userService.findByUsernameAndPassword(userLoginBindingModel.getUsername(),
+                userLoginBindingModel.getPassword());
+
+        if(userServiceModel == null){
+            redirectAttributes.addFlashAttribute("userLoginBindingModel", userLoginBindingModel);
+            redirectAttributes.addFlashAttribute("notFound", true);
+
+            return "redirect:login";
+        }
+
+        httpSession.setAttribute("user", userServiceModel);
+
+        return "redirect:/";
+    }
+
+
+
 }
