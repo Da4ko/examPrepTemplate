@@ -43,14 +43,12 @@
             <div class="text-white label-holder d-flex justify-content-center">
                 <label for="category" class="h4 mb-2">Category</label>
             </div>
-            <select class="browser-default custom-select" id="category" name="category">
+            <select th:field="*{category}" th:errorclass="bg-danger" class="browser-default custom-select" id="category" name="category">
                 <option value="">Select category</option>
-				<option value="FOOD">Food</option>
-                <option value="DRINK">Drink</option>
-                <option value="HOUSEHOLD">Household</option>
-                <option value="OTHER">Other</option>  				
+				<option th:each="c : ${T(com.example.webexamprep.model.entity.enums.CategoryName).values()}"
+                        th:text="${c}" th:value="${c}">Food</option>
             </select>
-            <small class="text-danger">Category error message</small>
+            <small th:if="${#fields.hasErrors('category')}" th:errors="*{category}" class="text-danger">Category error message</small>
         </div>
 
         <div class="button-holder d-flex justify-content-center">

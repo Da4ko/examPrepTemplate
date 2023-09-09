@@ -1,7 +1,10 @@
 package com.example.webexamprep.web;
 
 import com.example.webexamprep.model.binding.ProductAddBindingModel;
+import com.example.webexamprep.model.service.ProductServiceModel;
+import com.example.webexamprep.service.ProductService;
 import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,6 +16,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping("/products")
 public class ProductController {
+
+    private final ProductService productService;
+    private final ModelMapper modelMapper;
+
+    public ProductController(ProductService productService, ModelMapper modelMapper) {
+        this.productService = productService;
+        this.modelMapper = modelMapper;
+    }
 
 
     @GetMapping("/add")
@@ -32,7 +43,7 @@ public class ProductController {
             return "redirect:add";
         }
 
-        //todo save in db
+        productService.add(modelMapper.map(productAddBindingModel, ProductServiceModel.class));
 
         return "redirect:/";
 
