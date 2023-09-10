@@ -1,5 +1,6 @@
 package com.example.webexamprep.web;
 
+import com.example.webexamprep.model.entity.enums.CategoryName;
 import com.example.webexamprep.service.ProductService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,10 @@ public class HomeController {
         }
 
         model.addAttribute("totalSum", productService.getTotalSum());
+        model.addAttribute("drinks", productService.findAllProductsByCategoryName(CategoryName.DRINK));
+        model.addAttribute("foods", productService.findAllProductsByCategoryName(CategoryName.FOOD));
+        model.addAttribute("households", productService.findAllProductsByCategoryName(CategoryName.HOUSEHOLD));
+        model.addAttribute("others", productService.findAllProductsByCategoryName(CategoryName.OTHER));
 
         return "home";
     }
